@@ -3,19 +3,45 @@ const port = 5000;
 
 const server = http.createServer();
 
-server.on('request' , (req,res) =>{
-
-    if(req.url === '/friends'){
-        res.statusCode = 200;
-    res.setHeader('Content-Type' , 'application/json')
-
-    res.end(JSON.stringify({
+const friends = [
+    {
+        id : 0,
         name : "dhruwang",
         role : "fullstack developer",
         age : "20"
-    }));
+    },
+    {
+        id: 1,
+        name : "jay",
+        role : "blockchain developer",
+        age : "20"
+    },
+    {
+        id: 2,
+        name : "jaydip",
+        role : " app developer",
+        age : "20"
     }
-    else if(req.url === '/message'){
+];
+
+server.on('request' , (req,res) =>{
+
+    const items = req.url.split('/');                               // ex.- /friends/2 => [' ' , friends , 2]
+
+    if(items[1] === 'friends'){
+        res.statusCode = 200;
+        res.setHeader('Content-Type' , 'application/json')
+
+        if(items.length === 3){
+            const itemIndex = Number(items[2]);
+            res.end(JSON.stringify(friends[itemIndex]));
+        }
+        else{
+            res.end(JSON.stringify(friends)); 
+        }
+
+    }
+    else if(items[1] === 'message'){
         res.setHeader('Content-Type' , 'text/html');
 
         res.write('<html>')
@@ -24,6 +50,10 @@ server.on('request' , (req,res) =>{
         res.write('</body>')
         res.write('</html>')
 
+        res.end();
+    }
+    else{                                                           // if our url not match 
+        res.statusCode = 404;
         res.end();
     }
     
