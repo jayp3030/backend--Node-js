@@ -28,7 +28,15 @@ server.on('request' , (req,res) =>{
 
     const items = req.url.split('/');                               // ex.- /friends/2 => [' ' , friends , 2]
 
-    if(items[1] === 'friends'){
+    if(req.method === 'POST' && items[1] === 'friends'){
+
+        req.on('data' , (data) => {
+            const friend = data.toString();
+            console.log('request :' + friend);                      // output : request :{"id":3,"name":"sanket","role":"react dev","age":22}
+            friends.push(JSON.parse(friend));
+        });
+    }
+    else if(req.method === 'GET' && items[1] === 'friends'){
         res.statusCode = 200;
         res.setHeader('Content-Type' , 'application/json')
 
@@ -41,7 +49,7 @@ server.on('request' , (req,res) =>{
         }
 
     }
-    else if(items[1] === 'message'){
+    else if(req.method === 'GET' && items[1] === 'message'){
         res.setHeader('Content-Type' , 'text/html');
 
         res.write('<html>')
