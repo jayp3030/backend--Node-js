@@ -3,6 +3,7 @@ const friendsRouter = require('./routers/friends.routers');
 const messageRouter = require('./routers/messages.routers')
 
 const express = require('express');
+const path = require('path');
 const { route } = require('./routers/friends.routers');
 const app = express();
 const PORT = 3000;
@@ -14,6 +15,8 @@ app.use((req ,res,next)=>{
     const delta = Date.now() - start;
     console.log(`${req.method}${req.baseUrl}${req.url} ${delta} ms`);
 })
+
+app.use('/site',express.static(path.join(__dirname , 'public')));                                  // serving files (HTML file)
 app.use(express.json());
 
 app.use('/friends' , friendsRouter)
